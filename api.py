@@ -69,9 +69,23 @@ class ChestXrayModel(nn.Module):
 
 
 # ── Load model ───────────────────────────────────────────────────────────────
+
+import os
+import urllib.request
+
+MODEL_PATH = "model/best_model.pth"
+MODEL_URL = "https://github.com/SaugatDeo/chest-xray-classifier/releases/download/v1.0/best_model.pth"
+
+os.makedirs("model", exist_ok=True)
+
+if not os.path.exists(MODEL_PATH):
+    print("Downloading model weights...")
+    urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
+    print("Model downloaded.")
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = ChestXrayModel(num_classes=14, dropout=0.4)
-checkpoint = torch.load("model/best_model.pth", map_location=device, weights_only=False)
+checkpoint = torch.load(MODEL_PATH, map_location=device, weights_only=False)
 model.load_state_dict(checkpoint['model_state_dict'])
 model.eval()
 model.to(device)
