@@ -1,11 +1,11 @@
-# 🫁 ChestAI — Medical Image Classification System
+# ChestAI — Medical Image Classification System
 
-An AI-powered chest X-ray diagnostic assistant that classifies 14 pathological conditions using a custom deep learning model with explainable AI (Grad-CAM) visualizations.
+An AI-powered chest X-ray diagnostic assistant that classifies 14 pathological conditions using a custom deep learning model with explainable AI (Grad-CAM) visualizations. Fully deployed with a FastAPI backend and Streamlit frontend.
 
-## 🚀 Live Demo
+## 🌐 Live Demo
 
-**Frontend:** [Open on Streamlit Cloud](#) *(deploy link goes here)*  
-**API Docs:** [FastAPI Interactive Docs](#) *(deploy link goes here)*
+**Frontend:** https://chestai-diagnostic.streamlit.app  
+**API Docs:** https://saugatiwi-chest-xray-classifier.hf.space/docs
 
 Upload any chest X-ray and get:
 - Probability scores for 14 disease classes
@@ -70,9 +70,9 @@ Dense(14, Sigmoid) — Multi-label output
 | Mass | 0.7853 |
 | Pleural Thickening | 0.7472 |
 | Atelectasis | 0.7423 |
+| Consolidation | 0.7383 |
 | Nodule | 0.7130 |
 | Pneumonia | 0.7049 |
-| Consolidation | 0.7383 |
 | Infiltration | 0.6997 |
 
 > Comparable to published EfficientNet baselines (0.780–0.800) after only 5 epochs. CheXNet (Stanford 2017) reported 0.841 with full training.
@@ -96,6 +96,9 @@ Gradient-weighted Class Activation Mapping (Grad-CAM) generates heatmaps showing
 | Explainability | Grad-CAM (custom implementation) |
 | Backend API | FastAPI + Uvicorn |
 | Frontend | Streamlit |
+| Containerisation | Docker |
+| API Deployment | HuggingFace Spaces |
+| Frontend Deployment | Streamlit Community Cloud |
 | Dataset | NIH ChestX-ray14 (112,120 images) |
 | Training Platform | Kaggle (Tesla T4 GPU) |
 
@@ -108,9 +111,9 @@ chest-xray-classifier/
 ├── api.py              # FastAPI backend — /health, /model-info, /predict
 ├── app.py              # Streamlit medical dashboard frontend
 ├── requirements.txt    # Python dependencies
-├── Dockerfile          # Container for deployment
+├── Dockerfile          # Container for HuggingFace deployment
 ├── model/
-│   └── best_model.pth  # Trained model weights (not in repo — see Setup)
+│   └── best_model.pth  # Trained weights (downloaded at runtime from GitHub Releases)
 └── README.md
 ```
 
@@ -129,14 +132,7 @@ cd chest-xray-classifier
 pip install -r requirements.txt
 ```
 
-### 3. Download the trained model
-The model weights (137MB) are not stored in this repository due to GitHub file size limits.
-
-Download from: [Kaggle Output](#) *(link to Kaggle notebook output)*
-
-Place it at: `model/best_model.pth`
-
-### 4. Start the FastAPI backend
+### 3. Start the FastAPI backend
 ```bash
 uvicorn api:app --reload
 ```
@@ -144,12 +140,12 @@ uvicorn api:app --reload
 API will be live at `http://127.0.0.1:8000`  
 Interactive docs at `http://127.0.0.1:8000/docs`
 
-### 5. Start the Streamlit frontend
+### 4. Start the Streamlit frontend
 ```bash
 streamlit run app.py
 ```
 
-Open `http://localhost:8501`, set API endpoint in sidebar, upload a chest X-ray.
+Open `http://localhost:8501`, upload a chest X-ray and get predictions.
 
 ---
 
@@ -162,14 +158,14 @@ Open `http://localhost:8501`, set API endpoint in sidebar, upload a chest X-ray.
 | `/predict` | POST | Upload X-ray → returns 14 disease probabilities + Grad-CAM |
 
 ### Sample /predict Response
+
 ```json
 {
   "predictions": {
     "Atelectasis": 0.0114,
     "Cardiomegaly": 0.0023,
     "Pneumonia": 0.4290,
-    "Edema": 0.4960,
-    ...
+    "Edema": 0.4960
   },
   "top_diagnosis": "Edema",
   "confidence": 0.496,
