@@ -8,3 +8,4 @@ opencv-python-headless
 python-multipart
 streamlit
 requests
+langchain-core
