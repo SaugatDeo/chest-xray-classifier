@@ -161,9 +161,9 @@ with st.sidebar:
     st.markdown("### 🫁 ChestAI")
     st.markdown("---")
     
-   api_url = st.text_input(
-    "API Endpoint",
-    value="https://saugatiwi-chest-xray-classifier.hf.space",
+    api_url = st.text_input(
+        "API Endpoint",
+        value="https://saugatiwi-chest-xray-classifier.hf.space",
         help="FastAPI backend URL"
     )
     
